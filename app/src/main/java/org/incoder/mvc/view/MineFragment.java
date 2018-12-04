@@ -18,13 +18,12 @@ package org.incoder.mvc.view;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.incoder.mvc.R;
+import org.incoder.mvc.base.BaseFragmentV4;
+import org.incoder.mvc.inter.IBaseView;
 
 /**
  * MineFragment.
@@ -32,19 +31,34 @@ import org.incoder.mvc.R;
  * @author : Jerry xu
  * @since : 2018/12/3 22:27
  */
-public class MineFragment extends Fragment {
-
+public class MineFragment extends BaseFragmentV4 implements IBaseView {
 
     public MineFragment() {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mine, container, false);
+    public int bindLayout() {
+        return R.layout.fragment_mine;
     }
 
+    @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void initView(Bundle savedInstanceState, View contentView) {
+
+    }
+
+    @Override
+    public void doBusiness() {
+
+    }
+
+    @Override
+    public boolean isNeedEventBus() {
+        return false;
+    }
 }

@@ -14,51 +14,51 @@
  * limitations under the License.
  */
 
-package org.incoder.mvc.view;
-
+package org.incoder.mvc.inter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import org.incoder.mvc.R;
-import org.incoder.mvc.base.BaseFragmentV4;
-import org.incoder.mvc.inter.IBaseView;
-
 /**
- * HomeFragment.
+ * IBaseView.
  *
  * @author : Jerry xu
- * @since : 2018/12/3 22:27
+ * @since : 2018/12/4 00:15
  */
-public class HomeFragment extends BaseFragmentV4 implements IBaseView {
+public interface IBaseView {
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    /**
+     * 绑定布局
+     *
+     * @return 布局 Id
+     */
+    int bindLayout();
 
-    @Override
-    public int bindLayout() {
-        return R.layout.fragment_home;
-    }
+    /**
+     * 初始化数据
+     *
+     * @param bundle 传递过来的 bundle
+     */
+    void initData(@Nullable final Bundle bundle);
 
-    @Override
-    public void initData(@Nullable Bundle bundle) {
+    /**
+     * 初始化 view
+     *
+     * @param savedInstanceState savedInstanceState
+     * @param contentView        contentView
+     */
+    void initView(final Bundle savedInstanceState, final View contentView);
 
-    }
+    /**
+     * 业务操作
+     */
+    void doBusiness();
 
-    @Override
-    public void initView(Bundle savedInstanceState, View contentView) {
-
-    }
-
-    @Override
-    public void doBusiness() {
-
-    }
-
-    @Override
-    public boolean isNeedEventBus() {
-        return false;
-    }
+    /**
+     * 是否需要订阅事件
+     *
+     * @return boolean
+     */
+    boolean isNeedEventBus();
 }

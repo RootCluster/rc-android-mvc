@@ -16,12 +16,37 @@
 
 package org.incoder.mvc.retrofit;
 
+import android.support.annotation.NonNull;
+
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
+
 /**
  * 网络请求拦截器.
  *
  * @author : Jerry xu
  * @since : 2018/12/4 00:03
  */
-public class InterceptorHelper {
+class InterceptorHelper {
 
+    /**
+     * Header拦截器
+     */
+    public static class HeadInterceptor implements Interceptor {
+        @NonNull
+        @Override
+        public Response intercept(@NonNull Chain chain) throws IOException {
+            Request originalRequest = chain.request();
+            Request authorised = originalRequest.newBuilder()
+                    // 设备类型
+//                    .header(RetrofitManager.platform, "android")
+                    // 用户token，从文件中获取
+//                    .header(RetrofitManager.token, SPUtils.getInstance().getString(ConstantManager.SP_TOKEN))
+                    .build();
+            return chain.proceed(authorised);
+        }
+    }
 }

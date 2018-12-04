@@ -18,14 +18,16 @@ package org.incoder.mvc;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.incoder.mvc.adapter.BaseFragmentPagerAdapter;
+import org.incoder.mvc.base.BaseActivity;
 import org.incoder.mvc.view.HomeFragment;
 import org.incoder.mvc.view.MessageFragment;
 import org.incoder.mvc.view.MineFragment;
@@ -33,18 +35,25 @@ import org.incoder.mvc.view.MineFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * MainActivity.
  *
  * @author : Jerry xu
  * @since : 2018/12/3 21:31
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.navigation)
+    BottomNavigationView mNavigationView;
+    @BindView(R.id.vp_content)
+    ViewPager mViewPager;
 
     private List<Fragment> mFragments;
     private List<String> mTitles;
-    private ViewPager viewPager;
-    private BottomNavigationView navigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -68,15 +77,36 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        viewPager = findViewById(R.id.vp_content);
-        navigation = findViewById(R.id.navigation);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
 
-        setSupportActionBar(toolbar);
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            mViewPager.setCurrentItem(i);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
+
+    @Override
+    public int bindLayout() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void initView(Bundle savedInstanceState, View contentView) {
+        setSupportActionBar(mToolbar);
         initTitles();
         initFragment();
     }
@@ -89,35 +119,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFragment() {
-
         mFragments = new ArrayList<>();
         mFragments.add(new HomeFragment());
         mFragments.add(new MessageFragment());
         mFragments.add(new MineFragment());
 
-        viewPager.setAdapter(new BaseFragmentPagerAdapter(getSupportFragmentManager(), mFragments, mTitles));
-        viewPager.setOffscreenPageLimit(mFragments.size());
-        viewPager.addOnPageChangeListener(mOnPageChangeListener);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mViewPager.setAdapter(new BaseFragmentPagerAdapter(getSupportFragmentManager(), mFragments, mTitles));
+        mViewPager.setOffscreenPageLimit(mFragments.size());
+        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+        mNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
+    public void doBusiness() {
 
     }
 
-
-    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int i, float v, int i1) {
-
-        }
-
-        @Override
-        public void onPageSelected(int i) {
-            viewPager.setCurrentItem(i);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int i) {
-
-        }
-    };
-
+    @Override
+    public boolean isNeedEventBus() {
+        return false;
+    }
 }

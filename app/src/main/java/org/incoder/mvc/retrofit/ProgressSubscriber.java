@@ -16,12 +16,139 @@
 
 package org.incoder.mvc.retrofit;
 
+import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
+
+import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.ToastUtils;
+
+import org.incoder.mvc.manager.ConstantManager;
+
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
+import io.reactivex.observers.DisposableObserver;
+import retrofit2.HttpException;
+
 /**
  * 网络请求进度条订阅.
  *
  * @author : Jerry xu
  * @since : 2018/12/4 00:11
  */
-public class ProgressSubscriber {
+public class ProgressSubscriber<T> extends DisposableObserver<T> implements ProgressDialogHandler.ProgressCancelListener {
 
+    private SubscriberOnNextListener<T> mSubscriberOnNextListener;
+    private ProgressDialogHandler mProgressDialogHandler;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private boolean isShowDialog = true;
+
+    public ProgressSubscriber(Context context) {
+        mProgressDialogHandler = new ProgressDialogHandler(context, this, true);
+    }
+
+    public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context) {
+        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        mProgressDialogHandler = new ProgressDialogHandler(context, this, true);
+    }
+
+    public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context, boolean isShowDialog) {
+        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        this.isShowDialog = isShowDialog;
+        mProgressDialogHandler = new ProgressDialogHandler(context, this, isShowDialog);
+    }
+
+    public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context, boolean isShowDialog, SwipeRefreshLayout mSwipeRefreshLayout) {
+        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        this.isShowDialog = isShowDialog;
+        this.mSwipeRefreshLayout = mSwipeRefreshLayout;
+        mProgressDialogHandler = new ProgressDialogHandler(context, this, isShowDialog);
+    }
+
+    public void showProgressDialog() {
+        if (mProgressDialogHandler != null && isShowDialog) {
+            mProgressDialogHandler.obtainMessage(ProgressDialogHandler.SHOW_PROGRESS_DIALOG).sendToTarget();
+        }
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialogHandler != null && isShowDialog) {
+            mProgressDialogHandler.obtainMessage(ProgressDialogHandler.DISMISS_PROGRESS_DIALOG).sendToTarget();
+            mProgressDialogHandler = null;
+        }
+    }
+
+    @Override
+    public void onNext(T t) {
+        if (mSubscriberOnNextListener != null) {
+            mSubscriberOnNextListener.onNext(t);
+        }
+    }
+
+    @Override
+    public void onError(Throwable t) {
+        String error;
+
+        if (!NetworkUtils.isAvailableByPing()) {
+            error = "网络请求失败，请检查您的网络设置";
+        } else if (t instanceof SocketTimeoutException) {
+            error = "网络链接超时，请检查您的网络状态";
+        } else if (t instanceof ConnectException) {
+            error = "网络中断，请检查您的网络状态";
+        } else if (t instanceof HttpException) {
+            if (((HttpException) t).code() == ConstantManager.NOT_FOUND) {
+                error = "未找到资源404";
+            } else {
+                error = "服务器终断，请稍后再试";
+            }
+        } else {
+            if (TextUtils.isEmpty(t.getMessage())) {
+                error = "系统错误";
+            } else {
+                error = t.getMessage();
+            }
+        }
+        // 异常错误提示
+        ToastUtils.showShort(error);
+        // 取消进度动画
+        dismissProgressDialog();
+        // 取消下拉刷新
+        dismissSwipeLayout();
+    }
+
+    @Override
+    public void onComplete() {
+        dismissProgressDialog();
+        dismissSwipeLayout();
+    }
+
+    private void dismissSwipeLayout() {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onCancelProgress() {
+        if (!isDisposed()) {
+            dispose();
+        }
+    }
+
+
+    /**
+     * SubscriberOnNextListener
+     *
+     * @param <T>
+     */
+    public interface SubscriberOnNextListener<T> {
+
+        /**
+         * 请求成功，进行业务处理
+         *
+         * @param t T
+         */
+        void onNext(T t);
+    }
 }

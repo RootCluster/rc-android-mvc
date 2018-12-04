@@ -26,4 +26,7 @@ public class ConstantManager {
 
     public static String BASE_API = "";
 
+    public static int NOT_FOUND = 404;
+    public static int REQUEST_SUCCESS = 1;
+
 }

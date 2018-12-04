@@ -18,7 +18,7 @@ package org.incoder.mvc.retrofit;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.RecoverySystem;
+import android.os.Message;
 
 import org.incoder.mvc.widget.NetWorkCircleDialog;
 
@@ -30,13 +30,70 @@ import org.incoder.mvc.widget.NetWorkCircleDialog;
  */
 public class ProgressDialogHandler extends Handler {
 
-    private static final int SHOW_PROGRESS_DIALOG = 1;
-    private static final int DISMISS_PROGRESS_DIALOG = 2;
+    static final int SHOW_PROGRESS_DIALOG = 1;
+    static final int DISMISS_PROGRESS_DIALOG = 2;
 
     private NetWorkCircleDialog mCircleDialog;
 
     private Context mContext;
     private boolean cancelable;
-    private RecoverySystem.ProgressListener mListener;
+    private ProgressCancelListener mListener;
+
+    ProgressDialogHandler(Context context, ProgressCancelListener mProgressCancelListener,
+                          boolean cancelable) {
+        super();
+        this.mContext = context;
+        this.mListener = mProgressCancelListener;
+        this.cancelable = cancelable;
+    }
+
+    private void initProgressDialog() {
+        if (mCircleDialog == null) {
+            mCircleDialog = new NetWorkCircleDialog(mContext);
+
+            mCircleDialog.setCancelable(cancelable);
+
+            if (cancelable) {
+                mCircleDialog.setOnCancelListener(dialogInterface -> mListener.onCancelProgress());
+            }
+
+            if (!mCircleDialog.isShowing()) {
+                mCircleDialog.show();
+            }
+        }
+    }
+
+    /**
+     * 取消网络请求进度框
+     */
+    private void dismissProgressDialog() {
+        if (mCircleDialog != null) {
+            mCircleDialog.dismiss();
+            mCircleDialog = null;
+        }
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        super.handleMessage(msg);
+        switch (msg.what) {
+            case SHOW_PROGRESS_DIALOG:
+                initProgressDialog();
+                break;
+            case DISMISS_PROGRESS_DIALOG:
+                dismissProgressDialog();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public interface ProgressCancelListener {
+
+        /**
+         * 取消进度框
+         */
+        void onCancelProgress();
+    }
 
 }
