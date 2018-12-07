@@ -43,30 +43,35 @@ public class ProgressSubscriber<T> extends DisposableObserver<T> implements Prog
     private ProgressDialogHandler mProgressDialogHandler;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private boolean isShowDialog = true;
+    private Context mContext;
 
     public ProgressSubscriber(Context context) {
+        this.mContext = context;
         mProgressDialogHandler = new ProgressDialogHandler(context, this, true);
     }
 
     public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        this.mContext = context;
         mProgressDialogHandler = new ProgressDialogHandler(context, this, true);
     }
 
     public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context, boolean isShowDialog) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        this.mContext = context;
         this.isShowDialog = isShowDialog;
         mProgressDialogHandler = new ProgressDialogHandler(context, this, isShowDialog);
     }
 
     public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context, boolean isShowDialog, SwipeRefreshLayout mSwipeRefreshLayout) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        this.mContext = context;
         this.isShowDialog = isShowDialog;
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         mProgressDialogHandler = new ProgressDialogHandler(context, this, isShowDialog);
     }
 
-    public void showProgressDialog() {
+    private void showProgressDialog() {
         if (mProgressDialogHandler != null && isShowDialog) {
             mProgressDialogHandler.obtainMessage(ProgressDialogHandler.SHOW_PROGRESS_DIALOG).sendToTarget();
         }
@@ -80,12 +85,28 @@ public class ProgressSubscriber<T> extends DisposableObserver<T> implements Prog
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        showProgressDialog();
+    }
+
+    /**
+     * 向观察者提供一个要观察的新项目
+     *
+     * @param t T
+     */
+    @Override
     public void onNext(T t) {
         if (mSubscriberOnNextListener != null) {
             mSubscriberOnNextListener.onNext(t);
         }
     }
 
+    /**
+     * 通知观察者错误信息
+     *
+     * @param t Throwable
+     */
     @Override
     public void onError(Throwable t) {
         String error;
@@ -117,18 +138,18 @@ public class ProgressSubscriber<T> extends DisposableObserver<T> implements Prog
         dismissSwipeLayout();
     }
 
+    /**
+     * 通知观察者已完成发送基于推送的通知
+     */
     @Override
     public void onComplete() {
         dismissProgressDialog();
         dismissSwipeLayout();
     }
 
-    private void dismissSwipeLayout() {
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
+    /**
+     * 取消进度提示
+     */
     @Override
     public void onCancelProgress() {
         if (!isDisposed()) {
@@ -136,6 +157,14 @@ public class ProgressSubscriber<T> extends DisposableObserver<T> implements Prog
         }
     }
 
+    /**
+     * 解散Swipe刷新
+     */
+    private void dismissSwipeLayout() {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
 
     /**
      * SubscriberOnNextListener

@@ -64,12 +64,14 @@ public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
         return POSITION_NONE;
     }
 
+    /**
+     * 用于Tab设置TabItemTitle
+     *
+     * @param position position
+     * @return Char
+     */
     @Override
     public CharSequence getPageTitle(int position) {
-        if (mTitles == null || mTitles.size() == 0) {
-            return mTitles == null ? "" : mTitles.get(position);
-        } else {
-            return "";
-        }
+        return (mTitles == null || mTitles.size() < 1) ? "" : mTitles.get(position);
     }
 }

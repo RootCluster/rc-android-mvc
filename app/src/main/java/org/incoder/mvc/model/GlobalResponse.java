@@ -24,24 +24,15 @@ package org.incoder.mvc.model;
  */
 public class GlobalResponse<T> {
 
-    private int code;
-    private String msg;
+    private boolean error;
     private T results;
 
-    public int getCode() {
-        return code;
+    public boolean isError() {
+        return error;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setError(boolean error) {
+        this.error = error;
     }
 
     public T getResults() {

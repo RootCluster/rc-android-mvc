@@ -46,6 +46,7 @@ public class RetrofitManager {
     private Retrofit.Builder retrofit;
     private OkHttpClient client;
     private ApiService apiService;
+    private Class apiClass;
     /**
      * 设置GSON的非严格模式setLenient()
      */
@@ -80,7 +81,7 @@ public class RetrofitManager {
         return apiService;
     }
 
-    public static <T> T createApi(Class<T> c) {
+    private static <T> T createApi(Class<T> c) {
         return RetrofitManager.getInstance().getRetrofit().create(c);
     }
 
@@ -104,7 +105,7 @@ public class RetrofitManager {
      *
      * @return OkHttpClient
      */
-    public OkHttpClient getClient() {
+    private OkHttpClient getClient() {
         if (client == null) {
             synchronized (RetrofitManager.class) {
                 if (client == null) {
@@ -113,7 +114,8 @@ public class RetrofitManager {
                             // 方法为设置出现错误进行重新连接。
                             .retryOnConnectionFailure(true)
                             // 网络请求日志
-                            .addInterceptor(new HttpLoggingInterceptor().setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE))
+                            .addInterceptor(new HttpLoggingInterceptor().setLevel(BuildConfig.DEBUG ?
+                                    HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE))
                             // 网络请求连接器（添加通用参数）
                             .addNetworkInterceptor(new InterceptorHelper.HeadInterceptor())
                             // 设置链接超时时间

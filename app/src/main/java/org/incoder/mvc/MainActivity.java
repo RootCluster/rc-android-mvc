@@ -62,13 +62,13 @@ public class MainActivity extends BaseActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mFragments.get(0);
+                    mViewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_dashboard:
-                    mFragments.get(1);
+                    mViewPager.setCurrentItem(1);
                     return true;
                 case R.id.navigation_notifications:
-                    mFragments.get(2);
+                    mViewPager.setCurrentItem(2);
                     return true;
                 default:
                     break;
@@ -86,6 +86,14 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onPageSelected(int i) {
             mViewPager.setCurrentItem(i);
+            mToolbar.setTitle(mTitles.get(i));
+            if (i == 0) {
+                mNavigationView.setSelectedItemId(R.id.navigation_home);
+            } else if (i == 1) {
+                mNavigationView.setSelectedItemId(R.id.navigation_dashboard);
+            } else {
+                mNavigationView.setSelectedItemId(R.id.navigation_notifications);
+            }
         }
 
         @Override
@@ -106,8 +114,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView(Bundle savedInstanceState, View contentView) {
-        setSupportActionBar(mToolbar);
         initTitles();
+        mToolbar.setTitle(mTitles.get(0));
+        setSupportActionBar(mToolbar);
         initFragment();
     }
 
@@ -124,7 +133,7 @@ public class MainActivity extends BaseActivity {
         mFragments.add(new MessageFragment());
         mFragments.add(new MineFragment());
 
-        mViewPager.setAdapter(new BaseFragmentPagerAdapter(getSupportFragmentManager(), mFragments, mTitles));
+        mViewPager.setAdapter(new BaseFragmentPagerAdapter(getSupportFragmentManager(), mFragments));
         mViewPager.setOffscreenPageLimit(mFragments.size());
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
         mNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
