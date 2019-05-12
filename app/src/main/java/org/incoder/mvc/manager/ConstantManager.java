@@ -20,13 +20,15 @@ package org.incoder.mvc.manager;
  * ConstantManager.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:17
+ * @date : 2018/12/4 00:17
  */
 public class ConstantManager {
 
-    public static String BASE_API = "https://gank.io/api/";
+    public static String BASE_API = "https://api.douban.com/v2/movie/";
 
     public static int NOT_FOUND = 404;
     public static int REQUEST_SUCCESS = 1;
+
+    public static boolean IS_DEBUG = true;
 
 }

@@ -27,7 +27,7 @@ import java.util.List;
  * BaseFragmentPagerAdapter.
  *
  * @author : Jerry xu
- * @since : 2018/12/3 22:42
+ * @date : 2018/12/3 22:42
  */
 public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
 

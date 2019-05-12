@@ -27,7 +27,7 @@ import android.view.MotionEvent;
  * ViewPager禁用左右滑动.
  *
  * @author : Jerry xu
- * @since : 2018/12/3 22:27
+ * @date : 2018/12/3 22:27
  */
 public class NoSlideViewPager extends ViewPager {
 

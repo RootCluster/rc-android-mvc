@@ -26,7 +26,7 @@ import org.incoder.mvc.widget.NetWorkCircleDialog;
  * 网络请求进度条处理.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:12
+ * @date : 2018/12/4 00:12
  */
 public class ProgressDialogHandler extends Handler {
 

@@ -41,7 +41,7 @@ import butterknife.BindView;
  * MainActivity.
  *
  * @author : Jerry xu
- * @since : 2018/12/3 21:31
+ * @date : 2018/12/3 21:31
  */
 public class MainActivity extends BaseActivity {
 

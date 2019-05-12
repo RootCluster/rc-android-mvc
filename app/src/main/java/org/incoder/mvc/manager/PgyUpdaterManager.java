@@ -20,7 +20,7 @@ package org.incoder.mvc.manager;
  * PgyUpdaterManager.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:54
+ * @date : 2018/12/4 00:54
  */
 public class PgyUpdaterManager {
 

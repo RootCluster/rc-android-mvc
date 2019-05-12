@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.EventBus;
-import org.incoder.mvc.inter.IBaseView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -38,7 +37,7 @@ import butterknife.Unbinder;
  * BaseFragmentV4.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:14
+ * @date : 2018/12/4 00:14
  */
 public abstract class BaseFragmentV4 extends Fragment implements IBaseView {
 

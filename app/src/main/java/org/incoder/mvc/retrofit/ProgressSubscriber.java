@@ -19,15 +19,15 @@ package org.incoder.mvc.retrofit;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-
-import com.blankj.utilcode.util.NetworkUtils;
-import com.blankj.utilcode.util.ToastUtils;
+import android.widget.Toast;
 
 import org.incoder.mvc.manager.ConstantManager;
+import org.incoder.mvc.util.NetworkUtils;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
+import io.reactivex.Observer;
 import io.reactivex.observers.DisposableObserver;
 import retrofit2.HttpException;
 
@@ -35,9 +35,9 @@ import retrofit2.HttpException;
  * 网络请求进度条订阅.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:11
+ * @date : 2018/12/4 00:11
  */
-public class ProgressSubscriber<T> extends DisposableObserver<T> implements ProgressDialogHandler.ProgressCancelListener {
+public class ProgressSubscriber<T> extends DisposableObserver<T> implements ProgressDialogHandler.ProgressCancelListener, Observer<T> {
 
     private SubscriberOnNextListener<T> mSubscriberOnNextListener;
     private ProgressDialogHandler mProgressDialogHandler;
@@ -63,7 +63,8 @@ public class ProgressSubscriber<T> extends DisposableObserver<T> implements Prog
         mProgressDialogHandler = new ProgressDialogHandler(context, this, isShowDialog);
     }
 
-    public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context, boolean isShowDialog, SwipeRefreshLayout mSwipeRefreshLayout) {
+    public ProgressSubscriber(SubscriberOnNextListener<T> mSubscriberOnNextListener, Context context
+            , boolean isShowDialog, SwipeRefreshLayout mSwipeRefreshLayout) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mContext = context;
         this.isShowDialog = isShowDialog;
@@ -80,6 +81,7 @@ public class ProgressSubscriber<T> extends DisposableObserver<T> implements Prog
     private void dismissProgressDialog() {
         if (mProgressDialogHandler != null && isShowDialog) {
             mProgressDialogHandler.obtainMessage(ProgressDialogHandler.DISMISS_PROGRESS_DIALOG).sendToTarget();
+            mProgressDialogHandler.removeCallbacksAndMessages(null);
             mProgressDialogHandler = null;
         }
     }
@@ -131,7 +133,7 @@ public class ProgressSubscriber<T> extends DisposableObserver<T> implements Prog
             }
         }
         // 异常错误提示
-        ToastUtils.showShort(error);
+        Toast.makeText(mContext, error, Toast.LENGTH_SHORT).show();
         // 取消进度动画
         dismissProgressDialog();
         // 取消下拉刷新

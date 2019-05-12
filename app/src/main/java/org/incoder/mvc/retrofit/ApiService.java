@@ -16,20 +16,32 @@
 
 package org.incoder.mvc.retrofit;
 
-import org.incoder.mvc.model.EmptyResponse;
-import org.incoder.mvc.model.GlobalResponse;
+import org.incoder.mvc.model.BaseResponse;
+import org.incoder.mvc.model.DoubanMovieResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * 应用API接口.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:01
+ * @date : 2018/12/4 00:01
  */
 public interface ApiService {
 
-    @GET("today")
-    Observable<GlobalResponse<EmptyResponse>> today();
+    /**
+     * 获取豆瓣电影的Top250
+     *
+     * @param start start
+     * @param count count
+     * @return DoubanMovieResponse
+     */
+    @GET("top250")
+    Observable<BaseResponse<DoubanMovieResponse>> getTopMovie(@Query("start") int start, @Query("count") int count);
+
+
+    @GET("top250")
+    Observable<DoubanMovieResponse> getTopMovie(@Query("start") int star);
 }

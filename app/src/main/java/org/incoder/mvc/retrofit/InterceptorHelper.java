@@ -28,7 +28,7 @@ import okhttp3.Response;
  * 网络请求拦截器.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:03
+ * @date : 2018/12/4 00:03
  */
 class InterceptorHelper {
 

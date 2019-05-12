@@ -17,12 +17,12 @@
 package org.incoder.mvc.model;
 
 /**
- * org.incoder.mvc.retrofit.
+ * BaseResponse.
  *
  * @author : Jerry xu
  * @since : 2018/12/4 00:02
  */
-public class GlobalResponse<T> {
+public class BaseResponse<T> {
 
     private boolean error;
     private T results;

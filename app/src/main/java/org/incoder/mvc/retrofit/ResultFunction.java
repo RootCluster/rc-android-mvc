@@ -1,25 +1,25 @@
 package org.incoder.mvc.retrofit;
 
-import org.incoder.mvc.manager.ConstantManager;
-import org.incoder.mvc.model.GlobalResponse;
+import org.incoder.mvc.model.BaseResponse;
 
 import io.reactivex.functions.Function;
 
 /**
  * ResultFunction.
  *
- * @author : Jerry xu    date : 2018/12/4  14:03
- * @version : 1.0.0
+ * @author : Jerry xu
+ * @date : 2018/12/4  14:03
  */
-public class ResultFunction<T> implements Function<GlobalResponse<T>, T> {
+public class ResultFunction<T> implements Function<BaseResponse<T>, T> {
 
     public ResultFunction() {
 
     }
 
     @Override
-    public T apply(GlobalResponse<T> response) throws Exception {
-        if (response.getCode() != ConstantManager.REQUEST_SUCCESS) {
+    public T apply(BaseResponse<T> response) throws Exception {
+        // 这里对返回的数据进行全局处理
+        if (response.isError()) {
             throw new ApiException();
         }
         return response.getResults();

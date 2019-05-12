@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.incoder.mvc.inter;
+package org.incoder.mvc.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,9 +24,16 @@ import android.view.View;
  * IBaseView.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:15
+ * @date : 2018/12/4 00:15
  */
 public interface IBaseView {
+
+    /**
+     * 初始化数据
+     *
+     * @param bundle 传递过来的 bundle
+     */
+    void initData(@Nullable final Bundle bundle);
 
     /**
      * 绑定布局
@@ -36,11 +43,11 @@ public interface IBaseView {
     int bindLayout();
 
     /**
-     * 初始化数据
+     * 是否需要订阅事件
      *
-     * @param bundle 传递过来的 bundle
+     * @return boolean
      */
-    void initData(@Nullable final Bundle bundle);
+    boolean isNeedEventBus();
 
     /**
      * 初始化 view
@@ -54,11 +61,4 @@ public interface IBaseView {
      * 业务操作
      */
     void doBusiness();
-
-    /**
-     * 是否需要订阅事件
-     *
-     * @return boolean
-     */
-    boolean isNeedEventBus();
 }

@@ -17,11 +17,10 @@
 package org.incoder.mvc.model;
 
 /**
- * EmptyResponse
+ * org.incoder.mvc.model.
  *
  * @author : Jerry xu
- * @date : 2018/12/4 00:03
+ * @date : 2019/3/18 21:32
  */
-public class EmptyResponse {
-
+public class Person {
 }

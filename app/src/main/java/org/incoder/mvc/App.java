@@ -20,14 +20,13 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-import com.blankj.utilcode.util.Utils;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
  * App.
  *
  * @author : Jerry xu
- * @since : 2018/12/3 23:41
+ * @date : 2018/12/3 23:41
  */
 public class App extends Application {
 
@@ -40,7 +39,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Utils.init(getApplicationContext());
         initLeakCanary();
     }
 

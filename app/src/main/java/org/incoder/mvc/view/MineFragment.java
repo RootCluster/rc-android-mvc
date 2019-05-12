@@ -23,13 +23,13 @@ import android.view.View;
 
 import org.incoder.mvc.R;
 import org.incoder.mvc.base.BaseFragmentV4;
-import org.incoder.mvc.inter.IBaseView;
+import org.incoder.mvc.base.IBaseView;
 
 /**
  * MineFragment.
  *
  * @author : Jerry xu
- * @since : 2018/12/3 22:27
+ * @date : 2018/12/3 22:27
  */
 public class MineFragment extends BaseFragmentV4 implements IBaseView {
 

@@ -29,7 +29,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import org.greenrobot.eventbus.EventBus;
-import org.incoder.mvc.inter.IBaseView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -38,7 +37,7 @@ import butterknife.Unbinder;
  * BaseActivity.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:13
+ * @date : 2018/12/4 00:13
  */
 public abstract class BaseActivity extends AppCompatActivity implements IBaseView {
 

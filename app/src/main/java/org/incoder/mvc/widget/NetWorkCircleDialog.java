@@ -29,7 +29,7 @@ import org.incoder.mvc.R;
  * NetWorkCircleDialog.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 01:14
+ * @date : 2018/12/4 01:14
  */
 public class NetWorkCircleDialog extends Dialog {
 

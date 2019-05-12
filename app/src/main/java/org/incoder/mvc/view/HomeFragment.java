@@ -23,13 +23,22 @@ import android.view.View;
 
 import org.incoder.mvc.R;
 import org.incoder.mvc.base.BaseFragmentV4;
-import org.incoder.mvc.inter.IBaseView;
+import org.incoder.mvc.base.IBaseView;
+import org.incoder.mvc.model.DoubanMovieResponse;
+import org.incoder.mvc.retrofit.ApiService;
+import org.incoder.mvc.retrofit.ProgressSubscriber;
+import org.incoder.mvc.retrofit.ResultFunction;
+import org.incoder.mvc.retrofit.RetrofitManager;
+
+import java.util.List;
+
+import io.reactivex.functions.Function;
 
 /**
  * HomeFragment.
  *
  * @author : Jerry xu
- * @since : 2018/12/3 22:27
+ * @date : 2018/12/3 22:27
  */
 public class HomeFragment extends BaseFragmentV4 implements IBaseView {
 
@@ -54,7 +63,32 @@ public class HomeFragment extends BaseFragmentV4 implements IBaseView {
 
     @Override
     public void doBusiness() {
+        RetrofitManager.getInstance().toSubscribe(
+                RetrofitManager.createApi(ApiService.class).getTopMovie(1, 1)
+                        .map(new ResultFunction<>()),
+                new ProgressSubscriber<>(o -> {
+                    // 业务处理
 
+
+                }, getContext()));
+
+        RetrofitManager.getInstance().toSubscribe(
+                RetrofitManager.createApi(ApiService.class).getTopMovie(1)
+                        .map(new Function<DoubanMovieResponse, List<DoubanMovieResponse.SubjectsBean>>() {
+                            @Override
+                            public List<DoubanMovieResponse.SubjectsBean> apply(DoubanMovieResponse t) throws Exception {
+                                // 做特殊的数据返回校验比对，比对成功后返回业务需要处理的对象
+                                return t.getSubjects();
+                            }
+                        })
+                , new ProgressSubscriber<>(new ProgressSubscriber.SubscriberOnNextListener<List<DoubanMovieResponse.SubjectsBean>>() {
+                    @Override
+                    public void onNext(List<DoubanMovieResponse.SubjectsBean> doubanMovieResponse) {
+                        // 业务处理：得到数据比对后真正用于业务处理的数据对象
+
+                    }
+                }, getContext())
+        );
     }
 
     @Override

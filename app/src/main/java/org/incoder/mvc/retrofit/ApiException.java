@@ -20,7 +20,7 @@ package org.incoder.mvc.retrofit;
  * 网络请求异常处理.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:02
+ * @date : 2018/12/4 00:02
  */
 public class ApiException extends Exception {
 

@@ -16,10 +16,11 @@
 
 package org.incoder.mvc.retrofit;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.incoder.mvc.BuildConfig;
 import org.incoder.mvc.manager.ConstantManager;
 
 import java.util.concurrent.TimeUnit;
@@ -38,15 +39,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * 网络请求.
  *
  * @author : Jerry xu
- * @since : 2018/12/4 00:03
+ * @date : 2018/12/4 00:03
  */
 public class RetrofitManager {
 
     private static final long CONNECT_TIME = 10000;
     private Retrofit.Builder retrofit;
     private OkHttpClient client;
-    private ApiService apiService;
-    private Class apiClass;
     /**
      * 设置GSON的非严格模式setLenient()
      */
@@ -74,19 +73,8 @@ public class RetrofitManager {
         private static final RetrofitManager INSTANCE = new RetrofitManager();
     }
 
-    public ApiService getApiService() {
-        if (apiService == null) {
-            apiService = createApi(ApiService.class);
-        }
-        return apiService;
-    }
-
-    private static <T> T createApi(Class<T> c) {
+    public static <T> T createApi(@NonNull Class<T> c) {
         return RetrofitManager.getInstance().getRetrofit().create(c);
-    }
-
-    public static <T> T createApi(Class<T> c, String api) {
-        return RetrofitManager.getInstance().getRetrofit(api).create(c);
     }
 
     private Retrofit.Builder getBuilder() {
@@ -114,7 +102,7 @@ public class RetrofitManager {
                             // 方法为设置出现错误进行重新连接。
                             .retryOnConnectionFailure(true)
                             // 网络请求日志
-                            .addInterceptor(new HttpLoggingInterceptor().setLevel(BuildConfig.DEBUG ?
+                            .addInterceptor(new HttpLoggingInterceptor().setLevel(ConstantManager.IS_DEBUG ?
                                     HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE))
                             // 网络请求连接器（添加通用参数）
                             .addNetworkInterceptor(new InterceptorHelper.HeadInterceptor())
@@ -131,23 +119,9 @@ public class RetrofitManager {
         return client;
     }
 
-    /**
-     * 动态传入请求url前缀
-     *
-     * @param api url前缀
-     * @return Retrofit
-     */
-    private Retrofit getRetrofit(String api) {
-        return getBuilder()
-                .baseUrl(api)
-                .client(getClient())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(mGson))
-                .build();
-    }
 
     /**
-     * 默认API前缀
+     * 构造Retrofit
      *
      * @return Retrofit
      */
